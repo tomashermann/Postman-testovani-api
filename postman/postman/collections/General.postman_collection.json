@@ -67,6 +67,63 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Create new pet without required info",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "11768cd8-c5e2-44c9-abac-1659803948d4",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "8b908134-3f5c-4ee4-8166-2ea98c27687b",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "id": "39c7ce69-0786-41c5-8a56-421f264e8b98",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/pet/findByStatus?status=available",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "pet",
+                "findByStatus"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "available"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "52c5a650-90f0-40ae-b6d0-e624658e09b0"
