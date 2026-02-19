@@ -1,0 +1,63 @@
+{
+  "info": {
+    "_postman_id": "1c2f17c1-28aa-4042-86be-62072a0217e9",
+    "name": "General",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Pets",
+      "item": [
+        {
+          "name": "Add new Pets",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "015e243e-53e4-4781-8198-507c0f2fb8fd",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response return correct information\", function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.name).to.equal(\"Max\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "id": "13a2318b-b76c-4a7c-b84f-ba4cff1830b4",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"Pejsci\"\n  },\n  \"name\": \"Max\",\n  \"photoUrls\": [\n    \"https://example.com/foto.jpg\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"stene\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/pet",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "pet"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "52c5a650-90f0-40ae-b6d0-e624658e09b0"
+    }
+  ]
+}
