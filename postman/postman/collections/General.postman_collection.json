@@ -23,6 +23,11 @@
                   "pm.test(\"Response return correct information\", function() {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData.name).to.equal(\"Max\");",
+                  "});",
+                  "",
+                  "pm.test(\"Response return correct category\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.category.name).to.equal(\"Pejsci\");",
                   "});"
                 ],
                 "type": "text/javascript",
