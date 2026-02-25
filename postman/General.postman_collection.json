@@ -8,13 +8,58 @@
   },
   "item": [
     {
-      "name": "Zvířátko",
+      "name": "Pets",
       "item": [
         {
-          "name": "New Request",
+          "name": "Add new Pets",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response return correct information\", function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.name).to.equal(\"Max\");",
+                  "});",
+                  "",
+                  "pm.test(\"Response return correct category\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.category.name).to.equal(\"Pejsci\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"Pejsci\"\n  },\n  \"name\": \"Max\",\n  \"photoUrls\": [\n    \"https://example.com/foto.jpg\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"stene\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "{{BaseUrl}}/pet",
               "host": [
@@ -26,8 +71,429 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Find pets via status",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/pet/findByStatus?status=available",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "pet",
+                "findByStatus"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "available"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "create new user",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const requestBody = JSON.parse(pm.request.body.raw);",
+                  "",
+                  "pm.collectionVariables.set(\"current_username\", requestBody.username);",
+                  "pm.collectionVariables.set(\"current_password\", requestBody.password);",
+                  "pm.collectionVariables.set(\"current_email\", requestBody.email);",
+                  "pm.collectionVariables.set(\"current_phone\", requestBody.phone);",
+                  "pm.collectionVariables.set(\"current_firstname\", requestBody.firstName);",
+                  "pm.collectionVariables.set(\"current_lastname\", requestBody.lastName);",
+                  "pm.collectionVariables.set(\"current_userStatus\",requestBody.userStatus)",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \"username\": \"{{$randomUserName}}\",\n  \"firstName\": \"{{$randomFullName}}\",\n  \"lastName\": \"{{$randomLastName}}\",\n  \"email\": \"{{$randomEmail}}\",\n  \"password\": \"{{$randomPassword}}\",\n  \"phone\": \"{{$randomPhoneNumber}}\",\n  \"userStatus\": {{$randomInt}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/user",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check all information about current user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"The current user has returned all information and shour return status code 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    });",
+                  "",
+                  "pm.test(\"The current user has returned all information\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "",
+                  "    pm.expect(responseData.username).to.eql(pm.collectionVariables.get(\"current_username\"));",
+                  "    pm.expect(responseData.firstName).to.eql(pm.collectionVariables.get(\"current_firstname\"));",
+                  "    pm.expect(responseData.lastName).to.eql(pm.collectionVariables.get(\"current_lastname\"));",
+                  "    pm.expect(responseData.email).to.eql(pm.collectionVariables.get(\"current_email\"));",
+                  "    pm.expect(responseData.phone).to.eql(pm.collectionVariables.get(\"current_phone\"));",
+                  "    pm.expect(responseData.userStatus).to.eql(pm.collectionVariables.get    (\"current_userStatus\"));",
+                  "",
+                  "    ",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/user/{{current_username}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "user",
+                "{{current_username}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check all information about non exist user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Non exist user should return staus code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{$randomUserName}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{$randomUserName}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login with current user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"User is succesful loged and shoud return status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/user/login?username={{current_username}}&password={{current_password}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "user",
+                "login"
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "{{current_username}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{current_password}}",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"User is successful logout and shoud return status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/user/logout",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "user",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"User is succesful deleted and should return status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/user/{{current_username}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "user",
+                "{{current_username}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete the same user again",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"User is non exist and shoud return status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/user/{{current_username}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "user",
+                "{{current_username}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "current_username",
+      "value": ""
+    },
+    {
+      "key": "current_password",
+      "value": ""
+    },
+    {
+      "key": "current_email",
+      "value": ""
+    },
+    {
+      "key": "current_phone",
+      "value": ""
+    },
+    {
+      "key": "current_firstname",
+      "value": ""
+    },
+    {
+      "key": "current_lastname",
+      "value": ""
+    },
+    {
+      "key": "current_status",
+      "value": ""
+    },
+    {
+      "key": "current_userStatus",
+      "value": ""
+    },
+    {
+      "key": "current_userId",
+      "value": ""
     }
   ]
 }
